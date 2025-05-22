@@ -1,0 +1,140 @@
+\documentclass{article}
+\usepackage{tikz}
+\usetikzlibrary{positioning, shapes.geometric}
+
+\begin{document}
+
+\begin{center}
+\begin{tikzpicture}[
+  entity/.style={rectangle, draw=black, thick, minimum width=2.5cm, minimum height=1cm, fill=gray!10},
+  attribute/.style={ellipse, draw=black, fill=gray!20},
+  pk/.style={attribute, text underline},
+  fk/.style={attribute, dashed},
+  relationship/.style={diamond, draw=black, fill=white, minimum size=1.5cm, inner sep=1pt},
+  line/.style={draw, -}
+]
+
+% USERS Entity
+\node[entity] (Users) {\textbf{Users}};
+\node[pk, above left=of Users] (user_id) {user\_id};
+\node[attribute, left=of Users] (user_name) {user\_name};
+\node[attribute, below left=of Users] (email_user) {email};
+\node[attribute, below=of Users] (password_user) {password};
+\node[attribute, below right=of Users] (phone_no) {phone\_no};
+\node[attribute, right=of Users] (address_user) {address};
+
+\draw[line] (Users) -- (user_id);
+\draw[line] (Users) -- (user_name);
+\draw[line] (Users) -- (email_user);
+\draw[line] (Users) -- (password_user);
+\draw[line] (Users) -- (phone_no);
+\draw[line] (Users) -- (address_user);
+
+% ADMINS Entity
+\node[entity, right=6cm of Users] (Admins) {\textbf{Admins}};
+\node[pk, above left=of Admins] (admin_id) {admin\_id};
+\node[attribute, left=of Admins] (admin_name) {admin\_name};
+\node[attribute, below left=of Admins] (email_admin) {email};
+\node[attribute, below=of Admins] (password_admin) {password};
+
+\draw[line] (Admins) -- (admin_id);
+\draw[line] (Admins) -- (admin_name);
+\draw[line] (Admins) -- (email_admin);
+\draw[line] (Admins) -- (password_admin);
+
+% BRANDS Entity
+\node[entity, below=6cm of Users] (Brands) {\textbf{Brands}};
+\node[pk, left=of Brands] (brand_id) {brand\_id};
+\node[attribute, right=of Brands] (brand_name) {brand\_name};
+
+\draw[line] (Brands) -- (brand_id);
+\draw[line] (Brands) -- (brand_name);
+
+% MODELS Entity
+\node[entity, right=4cm of Brands] (Models) {\textbf{Models}};
+\node[pk, above=of Models] (model_id) {model\_id};
+\node[attribute, right=of Models] (model_name) {model\_name};
+\node[fk, below=of Models] (model_fk_brand) {brand\_id (FK)};
+
+\draw[line] (Models) -- (model_id);
+\draw[line] (Models) -- (model_name);
+\draw[line] (Models) -- (model_fk_brand);
+
+% MOBILES Entity
+\node[entity, right=4cm of Models] (Mobiles) {\textbf{Mobiles}};
+\node[pk, above=of Mobiles] (mobile_id) {mobile\_id};
+\node[attribute, right=of Mobiles] (color) {color};
+\node[attribute, below right=of Mobiles] (storage) {storage};
+\node[attribute, below=of Mobiles] (price) {price};
+\node[attribute, below left=of Mobiles] (image_url) {image\_url};
+\node[fk, below=3.5cm of Mobiles] (mobile_fk_model) {model\_id (FK)};
+
+\draw[line] (Mobiles) -- (mobile_id);
+\draw[line] (Mobiles) -- (color);
+\draw[line] (Mobiles) -- (storage);
+\draw[line] (Mobiles) -- (price);
+\draw[line] (Mobiles) -- (image_url);
+\draw[line] (Mobiles) -- (mobile_fk_model);
+
+% CART Entity
+\node[entity, below=3cm of Brands] (Cart) {\textbf{Cart}};
+\node[pk, left=of Cart] (cart_id) {cart\_id};
+\node[attribute, right=of Cart] (quantity_cart) {quantity};
+\node[fk, above left=1cm and 2.2cm of Cart] (cart_fk_user) {user\_id (FK)};
+\node[fk, right=4cm of Cart] (cart_fk_mobile) {mobile\_id (FK)};
+
+\draw[line] (Cart) -- (cart_id);
+\draw[line] (Cart) -- (quantity_cart);
+\draw[line] (Cart) -- (cart_fk_user);
+\draw[line] (Cart) -- (cart_fk_mobile);
+
+% ORDERS Entity
+\node[entity, right=5cm of Cart] (Orders) {\textbf{Orders}};
+\node[pk, above=of Orders] (order_id) {order\_id};
+\node[attribute, left=of Orders] (quantity_order) {quantity};
+\node[attribute, below left=of Orders] (order_date) {order\_date};
+\node[attribute, below=of Orders] (delivery_address) {delivery\_address};
+\node[fk, left=4cm of Orders] (order_fk_user) {user\_id (FK)};
+\node[fk, below=2cm of Orders] (order_fk_mobile) {mobile\_id (FK)};
+
+\draw[line] (Orders) -- (order_id);
+\draw[line] (Orders) -- (quantity_order);
+\draw[line] (Orders) -- (order_date);
+\draw[line] (Orders) -- (delivery_address);
+\draw[line] (Orders) -- (order_fk_user);
+\draw[line] (Orders) -- (order_fk_mobile);
+
+% PAYMENTS Entity
+\node[entity, right=4.5cm of Orders] (Payments) {\textbf{Payments}};
+\node[pk, above=of Payments] (payment_id) {payment\_id};
+\node[attribute, right=of Payments] (amount) {amount};
+\node[attribute, below right=of Payments] (payment_mode) {payment\_mode};
+\node[attribute, below=of Payments] (payment_status) {payment\_status};
+\node[fk, left=of Payments] (payment_fk_order) {order\_id (FK)};
+
+\draw[line] (Payments) -- (payment_id);
+\draw[line] (Payments) -- (amount);
+\draw[line] (Payments) -- (payment_mode);
+\draw[line] (Payments) -- (payment_status);
+\draw[line] (Payments) -- (payment_fk_order);
+
+% REVIEWS Entity
+\node[entity, below=3cm of Orders] (Reviews) {\textbf{Reviews}};
+\node[pk, left=of Reviews] (review_id) {review\_id};
+\node[attribute, below left=of Reviews] (rating) {rating};
+\node[attribute, below=of Reviews] (comment) {comment};
+\node[attribute, below right=of Reviews] (review_date) {review\_date};
+\node[fk, above left=2cm and 1cm of Reviews] (review_fk_user) {user\_id (FK)};
+\node[fk, right=4cm of Reviews] (review_fk_mobile) {mobile\_id (FK)};
+
+\draw[line] (Reviews) -- (review_id);
+\draw[line] (Reviews) -- (rating);
+\draw[line] (Reviews) -- (comment);
+\draw[line] (Reviews) -- (review_date);
+\draw[line] (Reviews) -- (review_fk_user);
+\draw[line] (Reviews) -- (review_fk_mobile);
+
+\end{tikzpicture}
+\end{center}
+
+\end{document}
